@@ -241,7 +241,7 @@ abstract class BaseEngine {
             "iTotalRecords" => $this->totalCount(),
             "iTotalDisplayRecords" => $this->count(),
         );
-        return Response::json($output);
+        return Response::json($output, 200, [ 'Content-Type' => 'application/json; charset=utf-8' ]);
     }
 
     /**
