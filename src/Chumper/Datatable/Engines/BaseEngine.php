@@ -365,8 +365,12 @@ abstract class BaseEngine {
      */
     protected function handleiDisplayLength($value)
     {
-        //limit nicht am query, sondern den ganzen
-        //holen und dann dynamisch in der Collection taken und skippen
+        // Setting the value to -1 affects array_slice and removes the last elements
+        // from the collection. -1 is effectively the same as null when used with array_slice
+        if (get_called_class() == 'Chumper\Datatable\Engines\CollectionEngine' && $value == -1) {
+            $value = null;
+        }
+
         $this->take($value);
     }
 
