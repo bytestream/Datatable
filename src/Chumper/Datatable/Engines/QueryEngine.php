@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
+use DB;
 
 class QueryEngine extends BaseEngine {
 
@@ -41,6 +42,7 @@ class QueryEngine extends BaseEngine {
         'orderOrder'        =>  null,
         'counter'           =>  0,
         'noGroupByOnCount'  =>  false,
+        'distinctCountGroup'=>  false,
     );
 
     function __construct($builder)
@@ -69,16 +71,12 @@ class QueryEngine extends BaseEngine {
         // the actual "original" copy...
         $originalBuilder = $this->originalBuilder;
 
-        if ($this->options['noGroupByOnCount']) {
-            $originalBuilder = $this->removeGroupBy($originalBuilder);
-        }
-
-        return $originalBuilder->count();
+        return $this->countRecords($originalBuilder);
     }
 
     public function getArray()
     {
-       return $this->getCollection($this->builder)->toArray();
+        return $this->getCollection($this->builder)->toArray();
     }
 
     public function reset()
@@ -106,6 +104,17 @@ class QueryEngine extends BaseEngine {
         return $this;
     }
 
+    /**
+     * Instead of counting all of the rows, the distinct rows in the group by will be counted instead.
+     *
+     * @return $this
+     */
+    public function setDistinctIfGroup()
+    {
+        $this->options['distinctCountGroup'] = true;
+        return $this;
+    }
+
     //--------PRIVATE FUNCTIONS
 
     protected function internalMake(Collection $columns, array $searchColumns = array())
@@ -116,18 +125,8 @@ class QueryEngine extends BaseEngine {
         $builder = $this->doInternalSearch($builder, $searchColumns);
         $countBuilder = $this->doInternalSearch($countBuilder, $searchColumns);
 
-        if($this->options['searchWithAlias'])
-        {
-            $this->options['counter'] = count($countBuilder->get());
-        }
-        else
-        {
-            // Remove the GROUP BY clause for the count
-            if ($this->options['noGroupByOnCount']) {
-                $countBuilder = $this->removeGroupBy($countBuilder);
-            }
-            $this->options['counter'] = $countBuilder->count();
-        }
+        // Count the number of records
+        $this->options['counter'] = $this->countRecords($countBuilder);
 
         $builder = $this->doInternalOrder($builder, $columns);
         $collection = $this->compile($builder, $columns);
@@ -136,22 +135,68 @@ class QueryEngine extends BaseEngine {
     }
 
     /**
-     * Remove the GROUP BY clause from a builder.
+     * Count the number of distinct records.
+     *
+     * @param  Builder|QueryBuilder $builder
+     * @return int
+     */
+    private function countRecords($builder)
+    {
+        // Distinct count group
+        if ($this->options['distinctCountGroup'] && count($this->getGroups($builder)) == 1) {
+            $builder->select(DB::raw('COUNT(DISTINCT ' . $this->getGroups($builder)[0] . ') as total'));
+            $builder = $this->setGroups($builder, null);
+
+            return $builder->first()->total;
+        }
+
+        // Search using alias
+        if ($this->options['searchWithAlias']) {
+            return count($builder->get());
+        }
+
+        if ($this->options['noGroupByOnCount']) {
+            $builder = $this->setGroups($builder, null);
+        }
+
+        return $builder->count();
+    }
+
+    /**
+     * Get the GROUP BY clause from a builder.
      *
      * @param Builder|QueryBuilder $builder
-     * @return Builder|QueryBuilder $builder with the groups property set to null.
+     * @return array
      */
-    private function removeGroupBy($builder)
+    private function getGroups($builder)
+    {
+        // Handle \Illuminate\Database\Eloquent\Builder
+        if ($builder instanceof Builder) {
+            return $builder->getQuery()->groups;
+        }
+
+        // Handle \Illuminate\Database\Query\Builder
+        return $builder->groups;
+    }
+
+    /**
+     * Set the GROUP BY clause on a builder.
+     *
+     * @param Builder|QueryBuilder $builder
+     * @param mixed                $value
+     * @return Builder|QueryBuilder
+     */
+    private function setGroups($builder, $value)
     {
         // Handle \Illuminate\Database\Eloquent\Builder
         if ($builder instanceof Builder) {
             $query = $builder->getQuery();
-            $query->groups = null;
+            $query->groups = $value;
             $builder->setQuery($query);
         }
         // Handle \Illuminate\Database\Query\Builder
         else {
-            $builder->groups = null;
+            $builder->groups = $value;
         }
 
         return $builder;
@@ -173,7 +218,7 @@ class QueryEngine extends BaseEngine {
             {
                 $builder = $builder->take($this->limit);
             }
-            //dd($this->builder->toSql());
+
             $this->collection = $builder->get();
 
             if(is_array($this->collection))
