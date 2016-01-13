@@ -67,6 +67,11 @@ class QueryEngine extends BaseEngine {
 
     public function totalCount()
     {
+        // Don't execute a second COUNT() query, if there was not a filter...
+        if (empty($this->search)) {
+            return $this->count();
+        }
+
         // Store temporary copy as we may modify it, we'd be stupid to modify
         // the actual "original" copy...
         $originalBuilder = $this->originalBuilder;
