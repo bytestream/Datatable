@@ -139,24 +139,23 @@ class Table {
     }
 
     /**
+     * Set JavaScript config definition for DataTables.
+     *
      * @return $this
      * @throws \Exception
      */
     public function setOptions()
     {
-        if(func_num_args() == 2)
-        {
-           $this->options[func_get_arg(0)] =func_get_arg(1);
-        }
-        else if(func_num_args() == 1 && is_array(func_get_arg(0)))
-        {
-            foreach (func_get_arg(0) as $key => $option)
-            {
-                $this->options[$key] = $option;
+        if (func_num_args() == 2) {
+            $this->options[func_get_arg(0)] = $this->getValue(func_get_arg(1));
+        } elseif (func_num_args() == 1 && is_array(func_get_arg(0))) {
+            foreach (func_get_arg(0) as $key => $option) {
+                $this->options[$key] = $this->getValue($option);
             }
-        }
-        else
+        } else {
             throw new Exception('Invalid number of options provided for the method "setOptions"');
+        }
+
         return $this;
     }
 
@@ -437,5 +436,20 @@ class Table {
         $this->createdMapping = true;
         //dd($matching);
         return $matching;
+    }
+
+    /**
+     * If a variable is callable, get the return value.
+     *
+     * @param  mixed $variable
+     * @return mixed
+     */
+    private function getValue($variable)
+    {
+        if (is_callable($variable)) {
+            return call_user_func($variable);
+        }
+
+        return $variable;
     }
 }
