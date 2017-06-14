@@ -227,9 +227,12 @@ abstract class BaseEngine {
     }
 
     /**
+     * Make JSON response.
+     *
+     * @param array $extra Extra data to add to the response. Cannot override default response data!
      * @return \Illuminate\Http\JsonResponse
      */
-    public function make()
+    public function make(array $extra = [])
     {
         //TODO Handle all inputs
         $this->handleInputs();
@@ -241,7 +244,7 @@ abstract class BaseEngine {
             "iTotalRecords" => $this->totalCount(),
             "iTotalDisplayRecords" => $this->count(),
         );
-        return Response::json($output, 200, [ 'Content-Type' => 'application/json; charset=utf-8' ]);
+        return Response::json(array_merge($extra, $output), 200, [ 'Content-Type' => 'application/json; charset=utf-8' ]);
     }
 
     /**
