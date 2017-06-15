@@ -212,30 +212,39 @@ class CollectionEngine extends BaseEngine {
                 {
                     $search = $row[$column];
                 }
-                if($caseSensitive)
+                // sburkett - added support for exact matching on specific columns
+                if(@$this->columnSearchExact[ $self->getNameByIndex($i) ] == 1)
                 {
-                    if($self->exactWordSearch)
-                    {
-                        if($toSearch[$i] === $search)
-                            $stack[$i] = true;
-                    }
-                    else
-                    {
-                        if(str_contains($search,$toSearch[$i]))
-                            $stack[$i] = true;
-                    }
+                    if($toSearch[$i] == $search)
+                        $stack[$i] = true;
                 }
                 else
                 {
-                    if($self->getExactWordSearch())
+                    if($caseSensitive)
                     {
-                        if(mb_strtolower($toSearch[$i]) === mb_strtolower($search))
-                            $stack[$i] = true;
+                        if ($self->exactWordSearch)
+                        {
+                            if ($toSearch[$i] === $search)
+                                $stack[$i] = true;
+                        }
+                        else
+                        {
+                            if (str_contains($search, $toSearch[$i]))
+                                $stack[$i] = true;
+                        }
                     }
                     else
                     {
-                        if(str_contains(mb_strtolower($search),mb_strtolower($toSearch[$i])))
-                            $stack[$i] = true;
+                        if ($self->getExactWordSearch())
+                        {
+                            if (mb_strtolower($toSearch[$i]) === mb_strtolower($search))
+                                $stack[$i] = true;
+                        }
+                        else
+                        {
+                            if (str_contains(mb_strtolower($search), mb_strtolower($toSearch[$i])))
+                                $stack[$i] = true;
+                        }
                     }
                 }
             }
