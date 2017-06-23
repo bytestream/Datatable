@@ -68,7 +68,7 @@ class QueryEngine extends BaseEngine {
     public function totalCount()
     {
         // Don't execute a second COUNT() query, if there was not a filter...
-        if (empty($this->search)) {
+        if (empty($this->search) && empty($this->fieldSearches)) {
             return $this->count();
         }
 
