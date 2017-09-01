@@ -152,12 +152,12 @@ class QueryEngine extends BaseEngine {
             $builder->select(DB::raw('COUNT(DISTINCT ' . $this->getGroups($builder)[0] . ') as total'));
             $builder = $this->setGroups($builder, null);
 
-            return $builder->first()->total;
+            return $builder->setEagerLoads([])->first()->total;
         }
 
         // Search using alias
         if ($this->options['searchWithAlias']) {
-            return count($builder->get());
+            return count($builder->setEagerLoads([])->get());
         }
 
         if ($this->options['noGroupByOnCount']) {
