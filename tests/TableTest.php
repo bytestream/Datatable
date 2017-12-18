@@ -81,7 +81,7 @@ class TableTest extends TestCase {
         //an anonymous function should be included as it is.
         $this->assertThat($parameters['options'],$this->stringContains('"foo":function(){ return foo; }') );
         //the callback it's a function name, it shouldn't be quoted
-        $this->assertThat($parameters['options'],$this->stringContains('"bar":myBar') );
+        $this->assertThat($parameters['options'],$this->stringContains('"bar":"myBar"') );
     }
 
     /**
