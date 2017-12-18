@@ -28,11 +28,5 @@
             "Chumper\\Datatable": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git://github.com/orchestral/phpseclib.git"
-        }
-    ]
+    "minimum-stability": "dev"
 }
