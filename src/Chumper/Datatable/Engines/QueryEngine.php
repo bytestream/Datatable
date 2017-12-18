@@ -177,11 +177,11 @@ class QueryEngine extends BaseEngine {
     {
         // Handle \Illuminate\Database\Eloquent\Builder
         if ($builder instanceof Builder) {
-            return $builder->getQuery()->groups;
+            return (array) $builder->getQuery()->groups;
         }
 
         // Handle \Illuminate\Database\Query\Builder
-        return $builder->groups;
+        return (array) $builder->groups;
     }
 
     /**
