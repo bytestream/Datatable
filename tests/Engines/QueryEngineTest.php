@@ -82,7 +82,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
     {
         $this->builder->shouldReceive('skip')->once()->with(1)->andReturn($this->builder);
         $this->builder->shouldReceive('get')->once()->andReturn(new Collection($this->getRealArray()));
-        $this->builder->shouldReceive('count')->twice()->andReturn(10);
+        $this->builder->shouldReceive('count')->once()->andReturn(10);
         $this->builder->shouldReceive('orderBy')->withAnyArgs()->andReturn($this->builder);
 
         $this->c = new QueryEngine($this->builder);
@@ -106,7 +106,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
     {
         $this->builder->shouldReceive('take')->once()->with(1)->andReturn($this->builder);
         $this->builder->shouldReceive('get')->once()->andReturn(new Collection($this->getRealArray()));
-        $this->builder->shouldReceive('count')->twice()->andReturn(10);
+        $this->builder->shouldReceive('count')->once()->andReturn(10);
         $this->builder->shouldReceive('orderBy')->withAnyArgs()->andReturn($this->builder);
 
         $this->c = new QueryEngine($this->builder);
@@ -133,7 +133,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
         $this->builder->shouldReceive('get')->andReturn(new Collection($this->getRealArray()));
         $this->builder->shouldReceive('where')->withAnyArgs()->andReturn($this->builder);
-        $this->builder->shouldReceive('count')->times(8)->andReturn(10);
+        $this->builder->shouldReceive('count')->times(7)->andReturn(10);
 
         $engine = new QueryEngine($this->builder);
 
