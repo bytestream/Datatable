@@ -2,8 +2,10 @@
 
 use Chumper\Datatable\Columns\FunctionColumn;
 use Chumper\Datatable\Engines\CollectionEngine;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 
@@ -23,7 +25,7 @@ class CollectionEngineTest extends TestCase {
      * @var
      */
     private $input;
-    
+
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('chumper.datatable.engine', array(
@@ -33,9 +35,9 @@ class CollectionEngineTest extends TestCase {
 
     public function setUp()
     {
-        
+
         parent::setUp();
-        
+
         $this->collection = Mockery::mock('Illuminate\Support\Collection');
         $this->c = new CollectionEngine($this->collection);
     }
@@ -316,10 +318,10 @@ class CollectionEngineTest extends TestCase {
 
     private function arrayHasKeyValue($key,$value,$array)
     {
-        $array = array_pluck($array,$key);
+        $array = Arr::pluck($array,$key);
         foreach ($array as $val)
         {
-            if(str_contains($val, $value))
+            if(Str::contains($val, $value))
                 return true;
         }
         return false;

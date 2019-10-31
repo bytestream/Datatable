@@ -4,7 +4,9 @@ use Chumper\Datatable\Columns\FunctionColumn;
 use Chumper\Datatable\Engines\BaseEngine;
 use Chumper\Datatable\Engines\EngineInterface;
 use Chumper\Datatable\Engines\QueryEngine;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
@@ -238,10 +240,10 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
 
     private function arrayHasKeyValue($key,$value,$array)
     {
-        $array = array_pluck($array,$key);
+        $array = Arr::pluck($array,$key);
         foreach ($array as $val)
         {
-            if(str_contains($val, $value))
+            if(Str::contains($val, $value))
                 return true;
         }
         return false;

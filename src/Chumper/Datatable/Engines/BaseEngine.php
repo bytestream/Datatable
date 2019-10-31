@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 
 /**
@@ -54,9 +55,9 @@ abstract class BaseEngine {
     /**
      * @var array
      * support for DB::raw fields on where
-     * sburkett - added for column-based exact matching                                                                                                            
-     */                                                                                                                                                            
-    protected $columnSearchExact = array(); 
+     * sburkett - added for column-based exact matching
+     */
+    protected $columnSearchExact = array();
 
     /**
      * @var
@@ -218,7 +219,7 @@ abstract class BaseEngine {
             else
             {
                 $this->columns->put($property, new FunctionColumn($property, function($model) use($property){
-                    try{return is_array($model)?$model[$property]:$model->$property;}catch(Exception $e){return null;}    
+                    try{return is_array($model)?$model[$property]:$model->$property;}catch(Exception $e){return null;}
                 }));
             }
             $this->showColumns[] = $property;
@@ -320,7 +321,7 @@ abstract class BaseEngine {
         $this->exactWordSearch = $value;
         return $this;
     }
-    
+
     /**
      * @param  array $columnNames Sets up a lookup table for which columns should use exact matching -sburkett
      * @return $this
@@ -483,7 +484,7 @@ abstract class BaseEngine {
     protected function isParameterForSingleColumnSearch($parameterName)
     {
         static $parameterNamePrefix = 'sSearch_';
-        return str_contains($parameterName, $parameterNamePrefix);
+        return Str::contains($parameterName, $parameterNamePrefix);
     }
 
     protected function prepareSearchColumns()

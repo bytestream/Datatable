@@ -4,6 +4,7 @@ use Exception;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 /**
  * Class Table
@@ -285,7 +286,7 @@ class Table {
 
         return View::make($this->table_view, $this->getViewParameters());
     }
-    
+
     /**
      * returns an array with the parameters that will be passed to the view when it's rendered
      * @return array
@@ -388,7 +389,7 @@ class Table {
 
     public function setId($id = '')
     {
-        $this->idName = empty($id)? str_random(8) : $id;
+        $this->idName = empty($id)? Str::random(8) : $id;
         return $this;
     }
 

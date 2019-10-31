@@ -1,6 +1,7 @@
 <?php namespace Chumper\Datatable\Engines;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * This handles the collections,
@@ -229,7 +230,7 @@ class CollectionEngine extends BaseEngine {
                         }
                         else
                         {
-                            if (str_contains($search, $toSearch[$i]))
+                            if (Str::contains($search, $toSearch[$i]))
                                 $stack[$i] = true;
                         }
                     }
@@ -242,7 +243,7 @@ class CollectionEngine extends BaseEngine {
                         }
                         else
                         {
-                            if (str_contains(mb_strtolower($search), mb_strtolower($toSearch[$i])))
+                            if (Str::contains(mb_strtolower($search), mb_strtolower($toSearch[$i])))
                                 $stack[$i] = true;
                         }
                     }
