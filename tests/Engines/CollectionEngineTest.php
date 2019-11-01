@@ -4,10 +4,9 @@ use Chumper\Datatable\Columns\FunctionColumn;
 use Chumper\Datatable\Engines\CollectionEngine;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Config;
 
 class CollectionEngineTest extends TestCase {
 
@@ -53,7 +52,7 @@ class CollectionEngineTest extends TestCase {
             )
         );
 
-        Input::replace(
+        Request::replace(
             array(
                 'iSortCol_0' => 0,
                 'sSortDir_0' => 'asc',
@@ -65,7 +64,7 @@ class CollectionEngineTest extends TestCase {
         $engine->setAliasMapping();
         $this->assertEquals($should, $engine->getArray());
 
-        Input::merge(
+        Request::merge(
             array(
                 'iSortCol_0' => 0,
                 'sSortDir_0' => 'desc'
@@ -88,7 +87,7 @@ class CollectionEngineTest extends TestCase {
     public function testSearch()
     {
         // Facade expection
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'eoo'
             )
@@ -112,7 +111,7 @@ class CollectionEngineTest extends TestCase {
         $engine->searchColumns("bla",1);
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'foo2'
             )
@@ -139,7 +138,7 @@ class CollectionEngineTest extends TestCase {
         $engine->searchColumns("bla3",1);
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'foo2'
             )
@@ -163,7 +162,7 @@ class CollectionEngineTest extends TestCase {
         $engine->addColumn($this->getTestColumns());
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'iDisplayStart' => 1
             )
@@ -179,7 +178,7 @@ class CollectionEngineTest extends TestCase {
 
     public function testTake()
     {
-        Input::replace(
+        Request::replace(
             array(
                 'iDisplayLength' => 1
             )
@@ -205,7 +204,7 @@ class CollectionEngineTest extends TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 't'
             )
@@ -223,7 +222,7 @@ class CollectionEngineTest extends TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'plasch'
             )
@@ -241,7 +240,7 @@ class CollectionEngineTest extends TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'tay'
             )
@@ -261,7 +260,7 @@ class CollectionEngineTest extends TestCase {
         $engine->searchColumns('foo','bar');
         $engine->setAliasMapping();
 
-        Input::replace(
+        Request::replace(
             array(
                 'sSearch' => 'O'
             )

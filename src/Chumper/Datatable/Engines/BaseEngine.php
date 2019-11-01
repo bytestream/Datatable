@@ -6,11 +6,10 @@ use Chumper\Datatable\Columns\DateColumn;
 use Chumper\Datatable\Columns\FunctionColumn;
 use Chumper\Datatable\Columns\TextColumn;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-
 
 /**
  * Class BaseEngine
@@ -401,7 +400,7 @@ abstract class BaseEngine {
      */
     protected function handleiSortCol_0($value)
     {
-        if(Input::get('sSortDir_0') == 'desc')
+        if(Request::input('sSortDir_0') == 'desc')
             $direction = BaseEngine::ORDER_DESC;
         else
             $direction = BaseEngine::ORDER_ASC;
@@ -461,7 +460,7 @@ abstract class BaseEngine {
     protected function handleInputs()
     {
         //Handle all inputs magically
-        foreach (Input::all() as $key => $input) {
+        foreach (Request::all() as $key => $input) {
 
             // handle single column search
             if ($this->isParameterForSingleColumnSearch($key))

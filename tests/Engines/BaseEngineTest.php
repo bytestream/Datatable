@@ -2,7 +2,6 @@
 
 use Chumper\Datatable\Engines\CollectionEngine;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Input;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Config;
 
@@ -110,4 +109,3 @@ class BaseEngineTest extends TestCase {
         $this->assertEquals(array('id','name','email', 'foo', 'bar'), $this->engine->getOrder());
     }
 }
- 
