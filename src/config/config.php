@@ -21,7 +21,7 @@ return array(
         |
         */
 
-        'class' => 'table table-bordered',
+        'class' => 'dataTable',
 
         /*
         |--------------------------------------------------------------------------
@@ -48,13 +48,7 @@ return array(
         |
         */
 
-        'options' => array(
-
-            "sPaginationType" => "full_numbers",
-
-            "bProcessing" => false
-
-        ),
+        'options' => array(),
 
         /*
         |--------------------------------------------------------------------------
