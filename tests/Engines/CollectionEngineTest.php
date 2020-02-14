@@ -32,7 +32,7 @@ class CollectionEngineTest extends TestCase {
             ));
     }
 
-    public function setUp()
+    public function setUp(): void
     {
 
         parent::setUp();
@@ -274,7 +274,7 @@ class CollectionEngineTest extends TestCase {
 
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

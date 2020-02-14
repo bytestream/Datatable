@@ -11,7 +11,7 @@ class DatatableTest extends \Orchestra\Testbench\TestCase {
      */
     private $dt;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         // set up config

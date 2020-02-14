@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
-class QueryEngineTest extends PHPUnit_Framework_TestCase {
+class QueryEngineTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var QueryEngine
@@ -21,7 +21,7 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
      */
     public $builder;
 
-    public function setUp()
+    public function setUp(): void
     {
         Config::shouldReceive('get')->zeroOrMoreTimes()->with("chumper.datatable.engine")->andReturn(
             array(
@@ -213,8 +213,12 @@ class QueryEngineTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->arrayHasKeyValue('foo','Taylor',$test));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
+        if ($container = Mockery::getContainer()) {
+            $this->addToAssertionCount($container->mockery_getExpectationCount());
+        }
+
         Mockery::close();
     }
 
