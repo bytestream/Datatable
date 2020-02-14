@@ -29,18 +29,17 @@ class TableTest extends TestCase {
             ));
     }
     
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->table = new Table();
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSetOptions()
     {
+        $this->expectException(Exception::class);
+
         $this->table->setOptions('foo','bar');
 
         $this->table->setOptions(array(
@@ -51,11 +50,10 @@ class TableTest extends TestCase {
         $this->table->setOptions('foo', 'bar', 'baz');
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSetCallbacks()
     {
+        $this->expectException(Exception::class);
+
         $this->table->setCallbacks('foo', 'bar');
         $this->assertArrayHasKey('foo', $this->table->getCallbacks());
 
@@ -84,11 +82,10 @@ class TableTest extends TestCase {
         $this->assertThat($parameters['options'],$this->stringContains('"bar":"myBar"') );
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSetCustomValues()
     {
+        $this->expectException(Exception::class);
+
         $this->table->setCustomValues('foo', 'bar');
         $this->assertArrayHasKey('foo', $this->table->getCustomValues());
 
@@ -172,7 +169,7 @@ class TableTest extends TestCase {
         $this->assertEquals('foo/url',$return['sAjaxSource']);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

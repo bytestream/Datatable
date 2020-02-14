@@ -2,7 +2,7 @@
 
 use Chumper\Datatable\Columns\FunctionColumn;
 
-class FunctionColumnTest extends PHPUnit_Framework_TestCase {
+class FunctionColumnTest extends \PHPUnit\Framework\TestCase {
 
     public function testSimple()
     {

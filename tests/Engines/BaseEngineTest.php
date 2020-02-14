@@ -14,7 +14,7 @@ class BaseEngineTest extends TestCase {
      */
     private $engine;
 
-    public function setUp()
+    public function setUp(): void
     {
         // set up config
         Config::shouldReceive('get')->zeroOrMoreTimes()->with("chumper.datatable.engine")->andReturn(
@@ -27,12 +27,10 @@ class BaseEngineTest extends TestCase {
         $this->engine = new CollectionEngine($this->collection);
     }
 
-
-    /**
-     * @expectedException Exception
-     */
     public function testAddColumn()
     {
+        $this->expectException(Exception::class);
+
         $this->engine->addColumn('foo', 'bar');
 
         $this->assertInstanceOf(
