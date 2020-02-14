@@ -400,7 +400,8 @@ class Table {
 
     public function setClass($class)
     {
-        $this->className = $class;
+        $this->className = trim("{$this->className} {$class}");
+
         return $this;
     }
 
