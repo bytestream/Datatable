@@ -40,10 +40,17 @@ class QueryEngine extends BaseEngine {
         'searchOperator'    =>  'LIKE',
         'searchWithAlias'   =>  false,
         'orderOrder'        =>  null,
-        'counter'           =>  0,
+        'count'             => true,
         'noGroupByOnCount'  =>  false,
         'distinctCountGroup'=>  false,
     );
+
+    /**
+     * Cache of how many records exist.
+     *
+     * @var int
+     */
+    protected $total = 0;
 
     function __construct($builder)
     {
@@ -62,11 +69,15 @@ class QueryEngine extends BaseEngine {
 
     public function count()
     {
-        return $this->options['counter'];
+        return $this->total;
     }
 
     public function totalCount()
     {
+        if ($this->options['count']) {
+            return null;
+        }
+
         // Don't execute a second COUNT() query, if there was not a filter...
         if (empty($this->search) && empty($this->fieldSearches)) {
             return $this->count();
@@ -120,6 +131,34 @@ class QueryEngine extends BaseEngine {
         return $this;
     }
 
+    /**
+     * Disable COUNT(*) queries.
+     *
+     * Advanced usage only!
+     *   Requires a DataTable pagination plugin which knows how to handle NULL iTotalRecords and iTotalDisplayRecords
+     *   entries.
+     *
+     * @return $this
+     */
+    public function disableCounts()
+    {
+        $this->options['count'] = false;
+
+        return $this;
+    }
+
+    /**
+     * Enable COUNT(*) queries.
+     *
+     * @return $this
+     */
+    public function enableCounts()
+    {
+        $this->options['count'] = true;
+
+        return $this;
+    }
+
     //--------PRIVATE FUNCTIONS
 
     protected function internalMake(Collection $columns, array $searchColumns = array())
@@ -131,7 +170,7 @@ class QueryEngine extends BaseEngine {
         $countBuilder = $this->doInternalSearch($countBuilder, $searchColumns);
 
         // Count the number of records
-        $this->options['counter'] = $this->countRecords($countBuilder);
+        $this->total = $this->countRecords($countBuilder);
 
         $builder = $this->doInternalOrder($builder, $columns);
         $collection = $this->compile($builder, $columns);
@@ -147,6 +186,10 @@ class QueryEngine extends BaseEngine {
      */
     private function countRecords($builder)
     {
+        if ($this->options['count'] === false) {
+            return null;
+        }
+
         // Distinct count group
         if ($this->options['distinctCountGroup'] && count($this->getGroups($builder)) == 1) {
             $builder->select(DB::raw('COUNT(DISTINCT ' . $this->getGroups($builder)[0] . ') as total'));
